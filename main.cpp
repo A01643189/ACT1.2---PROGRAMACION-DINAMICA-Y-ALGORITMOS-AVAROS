@@ -10,7 +10,9 @@
 
 // Algoritmo Dinámico
 
-
+int cambioDinamico(int denominaciones[], int n, int cantidad) {
+    
+}
 
 // Algoritmo Avaro
 
