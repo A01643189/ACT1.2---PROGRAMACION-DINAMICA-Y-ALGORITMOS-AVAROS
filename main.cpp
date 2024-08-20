@@ -10,23 +10,52 @@
 
 // Algoritmo Dinámico
 
-int cambioDinamico(int denominaciones[], int p, int q) {
+int cambioDinamico(int denominaciones[], int n, int p, int q) {
+    int cambio = q - p;
+    int F[cambio + 1]; // Arreglo para guardar el numero de monedas
+    int usado[cambio + 1]; // Arreglo que guarda denominaciones usadas
+    int usados[n] = {0}; // Arreglo que cuenta el uso de cada denominacion
 
-    int cambio = q-p;
-    int restante = cambio;
-    int F[cambio];
-    F[0] = 0;
+    // Inicializar el arreglo con un valor maximo del cual ir trabajando
+    // X valor que no se pueda entregar cambio exacto tendrian valor INT_MAX
+    for(int i = 0; i <= cambio; i++) {
+        F[i] = INT_MAX;
+    }
 
-    int usados[cambio];
-    
-    for (int i = 0; i <= sizeof(denominaciones); i++){
-        for(int i = 1; i <= sizeof(F); i++){
-             if(cambio <= denominaciones[i]){
-                continue;
-             }
+    F[0] = 0; // Base case: no coins needed to make 0 change
+
+    // Iterar por el arreglo F
+    for (int i = 1; i <= cambio; i++) {
+        for(int j = 0; j < n; j++) {
+            if(denominaciones[j] <= i && F[i - denominaciones[j]] != INT_MAX) {
+                if(F[i] > F[i - denominaciones[j]] + 1) {
+                    F[i] = F[i - denominaciones[j]] + 1;
+                    usado[i] = j; // Mantenemos cuenta de las denominaciones usadas
+                }
+            }
         }
     }
-    
+
+    // Si F[cambio] sigue en INT_MAX, no hay solucion
+    if(F[cambio] == INT_MAX) {
+        std::cout << "No se puede dar cambio preciso" << std::endl;
+        return -1;
+    }
+
+    // Utilizar el arreglo creado para obtener el numero de monedas
+    int faltante = cambio;
+    while(faltante > 0) {
+        int temp = usado[faltante];
+        usados[temp] += 1;
+        faltante -= denominaciones[temp];
+    }
+
+    // Output the result
+    for (int i = 0; i < n; i++) {
+        std::cout << "Moneda: " << denominaciones[i] << " -> Cantidad: " << usados[i] << std::endl;
+    }
+
+    return 0;
 }
 
 // Algoritmo Avaro
@@ -78,7 +107,17 @@ int main() {
     int q; // Cantidad a cambiar (billete con el que pago)
     std::cin >> q;
 
+    if(p > q){
+        std::cout << "Cantidad insuficiente" << std::endl;
+        return -1;
+    }
+
+    std::cout << "Cambio Dinamico" << std::endl;
+    cambioDinamico(denominaciones,n,p,q);
+
+    std::cout << "Cambio Avaro" << std::endl;
     cambioAvaro(denominaciones, n, p, q);
+
 
     delete [] denominaciones; 
     return 0;
