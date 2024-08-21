@@ -10,7 +10,7 @@
 
 // Algoritmo Dinámico
 
-int cambioDinamico(int denominaciones[], int n, int p, int q) {
+int cambioDinamico(int denominaciones[], int n, int p, int q) { 
     int cambio = q - p;
     int F[cambio + 1]; // Arreglo para guardar el numero de monedas
     int usado[cambio + 1]; // Arreglo que guarda denominaciones usadas
@@ -64,14 +64,17 @@ int cambioAvaro(int* denominaciones, int n, int p, int q) {
     int* max = std::max_element(denominaciones, denominaciones + n);
     int cambio_total = q - p;
     int cambio = 0;
+    int contador = 0;
     
     while (cambio_total > cambio) {
         if (cambio + max[0] <= cambio_total) {
             cambio += max[0];
-            std::cout << max[0] << std::endl;
+            contador++;
         } else {
+            std::cout << "Moneda: " << max[0] << " -> Cantidad: " << contador << std::endl;
             int* new_denominaciones = new int[n - 1];
             int new_n = 0;
+            contador = 0;
             
             for (int i = 0; i < n; ++i) {
                 if (denominaciones[i] != max[0]) {
@@ -79,14 +82,17 @@ int cambioAvaro(int* denominaciones, int n, int p, int q) {
                 }
             }
 
-            delete[] denominaciones;  // Free the old array memory
-            denominaciones = new_denominaciones;  // Point to the new array
+            delete[] denominaciones; 
+            denominaciones = new_denominaciones;  
             n = new_n;
             max = std::max_element(denominaciones, denominaciones + n);
         }
     }
+    if (contador > 0) {
+        std::cout << "Moneda: " << max[0] << " -> Cantidad: " << contador << std::endl;
+    }
 
-    return cambio;
+    return 0;
 }
 
 // Main function
