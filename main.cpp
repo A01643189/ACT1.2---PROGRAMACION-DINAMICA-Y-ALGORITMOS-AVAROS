@@ -22,7 +22,7 @@ int cambioDinamico(int denominaciones[], int n, int p, int q) { // Complejidad (
         F[i] = INT_MAX;
     }
 
-    F[0] = 0; // Base case: no coins needed to make 0 change
+    F[0] = 0; // Caso Base
 
     // Iterar por el arreglo F
     for (int i = 1; i <= cambio; i++) {
@@ -50,7 +50,7 @@ int cambioDinamico(int denominaciones[], int n, int p, int q) { // Complejidad (
         faltante -= denominaciones[temp];
     }
 
-    // Output the result
+    // Output del resultado
     for (int i = 0; i < n; i++) {
         std::cout << "Moneda: " << denominaciones[i] << " -> Cantidad: " << usados[i] << std::endl;
     }
