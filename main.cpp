@@ -10,7 +10,7 @@
 
 // Algoritmo Dinámico
 
-int cambioDinamico(int denominaciones[], int n, int p, int q) { 
+int cambioDinamico(int denominaciones[], int n, int p, int q) { // Complejidad (O(n*q)) donde n es la cantidad de denominaciones y q es la cantidad a cambiar
     int cambio = q - p;
     int F[cambio + 1]; // Arreglo para guardar el numero de monedas
     int usado[cambio + 1]; // Arreglo que guarda denominaciones usadas
@@ -60,35 +60,36 @@ int cambioDinamico(int denominaciones[], int n, int p, int q) {
 
 // Algoritmo Avaro
 
-int cambioAvaro(int* denominaciones, int n, int p, int q) {
-    int* max = std::max_element(denominaciones, denominaciones + n);
+int cambioAvaro(int* denominaciones, int n, int p, int q) { // Complejidad: O(n^2) al depender de la cantidad de denominaciones y estar constantemente encontrando la maxima denominacion (Se puede mejorar la complejidad a O(n) si se ordenan las denominaciones)
+
+    int* max = std::max_element(denominaciones, denominaciones + n); // Se busca la maxima denominacion
     int cambio_total = q - p;
     int cambio = 0;
     int contador = 0;
     
-    while (cambio_total > cambio) {
-        if (cambio + max[0] <= cambio_total) {
+    while (cambio_total > cambio) { // Este bucle tiene una complejidad en el peor caso de O((q-p)/d_min)
+        if (cambio + max[0] <= cambio_total) { // Se verifica si la moneda actual se puede usar
             cambio += max[0];
             contador++;
-        } else {
+        } else { // Si no se puede usar la moneda actual, se imprime la cantidad de monedas usadas y se elimina la moneda del arreglo
             std::cout << "Moneda: " << max[0] << " -> Cantidad: " << contador << std::endl;
             int* new_denominaciones = new int[n - 1];
             int new_n = 0;
             contador = 0;
             
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < n; ++i) { // Se crea un nuevo arreglo sin la moneda actual
                 if (denominaciones[i] != max[0]) {
                     new_denominaciones[new_n++] = denominaciones[i];
                 }
             }
 
-            delete[] denominaciones; 
+            delete[] denominaciones;  
             denominaciones = new_denominaciones;  
             n = new_n;
             max = std::max_element(denominaciones, denominaciones + n);
         }
     }
-    if (contador > 0) {
+    if (contador > 0) { // Se imprime la cantidad de monedas usadas de la ultima denominacion
         std::cout << "Moneda: " << max[0] << " -> Cantidad: " << contador << std::endl;
     }
 
